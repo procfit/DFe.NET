@@ -1870,7 +1870,8 @@ namespace NFe.AppTeste
         {
             var dest = new dest(versao)
             {
-                CNPJ = "99999999000191",
+                CNPJ = "0ZEN3MS8000127",
+                //CNPJ = "99999999000191",
                 //CPF = "99999999999",
             };
             dest.xNome = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL"; //Obrigatório para NFe e opcional para NFCe
@@ -2106,7 +2107,7 @@ namespace NFe.AppTeste
                         {
                             qTrib = 1,
                             uTrib = "PC",
-                            pISEspec = 0,
+                            adRemIS = 0,
                             pIS = 0,
                             vIS = 0,
                             cClassTribIS = "000001",
@@ -2593,18 +2594,15 @@ namespace NFe.AppTeste
                 var raizCnpj = Funcoes.InpuBox(
                     this,
                     "Administração do CSC",
-                    "Raiz do CNPJ do contribuinte que está efetuando a consulta (oito primeiros dígitos do CNPJ):"
+                    "Raiz do CNPJ do contribuinte que está efetuando a consulta (oito primeiras posições do CNPJ):"
                 );
                 if (string.IsNullOrEmpty(raizCnpj))
                     throw new Exception("A Raiz do CNPJ do contribuinte deve ser informada!");
-                long l;
-                var longo = long.TryParse(raizCnpj, out l);
-                if (!longo)
+                //NT Conjunta 2025.001: o CNPJ pode ser alfanumérico nas 12 primeiras posições
+                if (!System.Text.RegularExpressions.Regex.IsMatch(raizCnpj, "^[0-9A-Z]{8}$"))
                     throw new Exception(
-                        "A Raiz do CNPJ do contribuinte deve conter apenas números!"
+                        "A Raiz do CNPJ do contribuinte deve conter 8 caracteres, apenas números e letras maiúsculas!"
                     );
-                if (raizCnpj.Length != 8)
-                    throw new Exception("A Raiz do CNPJ do contribuinte deve conter 8 caracteres!");
 
                 var idCsc = "";
                 var codigoCsc = "";

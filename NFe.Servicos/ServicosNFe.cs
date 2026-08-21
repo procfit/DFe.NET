@@ -858,6 +858,23 @@ namespace NFe.Servicos
         }
 
         /// <summary>
+        /// Envia eventos do tipo "Manifestação do destinatário" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoManifestacaoDestinatario(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoManifestacaoDestinatario, _cFgServico.VersaoRecepcaoEventoManifestacaoDestinatario, assinar);
+            return retorno;
+        }
+
+        /// <summary>
         ///     Envia um evento do tipo "EPEC"
         /// </summary>
         /// <param name="idlote"></param>
@@ -999,6 +1016,23 @@ namespace NFe.Servicos
         }
 
         /// <summary>
+        /// Envia eventos do tipo "Insucesso na Entrega da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoInsucessoEntrega(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoInsucessoEntregaNFe, _cFgServico.VersaoRecepcaoEventoInsucessoEntrega, assinar);
+            return retorno;
+        }
+
+        /// <summary>
         /// Serviço para cancelamento insucesso na entrega
         /// </summary>
         /// <param name="idlote">Nº do lote</param>
@@ -1047,6 +1081,23 @@ namespace NFe.Servicos
             var evento = new evento { versao = versaoServico, infEvento = infEvento };
 
             var retorno = RecepcaoEvento(idlote, new List<evento> { evento }, ServicoNFe.RecepcaoEventoCancInsucessoEntregaNFe, _cFgServico.VersaoRecepcaoEventoInsucessoEntrega, true);
+            return retorno;
+        }
+
+        /// <summary>
+        /// Envia eventos do tipo "Cancelamento do Insucesso na Entrega da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoCancInsucessoEntrega(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoCancInsucessoEntregaNFe, _cFgServico.VersaoRecepcaoEventoInsucessoEntrega, assinar);
             return retorno;
         }
 
@@ -1120,6 +1171,23 @@ namespace NFe.Servicos
         }
 
         /// <summary>
+        /// Envia eventos do tipo "Comprovante de Entrega da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoComprovanteEntrega(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoComprovanteEntregaNFe, _cFgServico.VersaoRecepcaoEventoComprovanteEntrega, assinar);
+            return retorno;
+        }
+
+        /// <summary>
         /// Serviço para cancelamento comprovante de entrega
         /// </summary>
         /// <param name="idlote">Nº do lote</param>
@@ -1172,6 +1240,23 @@ namespace NFe.Servicos
             return retorno;
         }
 
+        /// <summary>
+        /// Envia eventos do tipo "Cancelamento do Comprovante de Entrega da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoCancComprovanteEntrega(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoCancComprovanteEntregaNFe, _cFgServico.VersaoRecepcaoEventoComprovanteEntrega, assinar);
+            return retorno;
+        }
+
 
         /// <summary>
         /// Recepção do Evento de Conciliação Financeira
@@ -1220,6 +1305,23 @@ namespace NFe.Servicos
             var evento = new evento { versao = versaoServico, infEvento = infEvento };
 
             var retorno = RecepcaoEvento(idlote, new List<evento> { evento }, ServicoNFe.RecepcaoEventoConciliacaoFinanceiraNFe, _cFgServico.VersaoRecepcaoEventoConciliacaoFinanceira, true);
+            return retorno;
+        }
+
+        /// <summary>
+        /// Envia eventos do tipo "Conciliação Financeira da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoConciliacaoFinanceira(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoConciliacaoFinanceiraNFe, _cFgServico.VersaoRecepcaoEventoConciliacaoFinanceira, assinar);
             return retorno;
         }
 
@@ -1350,6 +1452,23 @@ namespace NFe.Servicos
             return retornoRecepcaoEvento;
         }
         
+        /// <summary>
+        /// Envia eventos do tipo "Cancelamento da Conciliação Financeira da NF-e" já assinado.
+        /// </summary>
+        /// <param name="idlote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe, sobrescrevendo o Id
+        /// que já estiver preenchido.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoCancConciliacaoFinanceira(int idlote, List<evento> eventos, bool assinar = false)
+        {
+            var retorno = RecepcaoEvento(idlote, eventos, ServicoNFe.RecepcaoEventoCancConciliacaoFinanceiraNFe, _cFgServico.VersaoRecepcaoEventoConciliacaoFinanceira, assinar);
+            return retorno;
+        }
+
         /// <summary>
         ///     Serviço para evento destinação de item para consumo pessoal
         /// </summary>
