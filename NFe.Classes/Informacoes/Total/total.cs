@@ -38,6 +38,19 @@ namespace NFe.Classes.Informacoes.Total
     public class total
     {
         private decimal? _vNFTot;
+        private decimal? _vProdLiqTot;
+
+        /// <summary>
+        ///     Valor Total Líquido dos Produtos ou Serviços (sem tributos) (PL_010h)
+        ///     <para>Primeiro elemento do grupo total, antes de ICMSTot.</para>
+        /// </summary>
+        public decimal? vProdLiqTot
+        {
+            get => _vProdLiqTot;
+            set => _vProdLiqTot = value.Arredondar(2);
+        }
+
+        public bool ShouldSerializevProdLiqTot() => vProdLiqTot.HasValue;
 
         /// <summary>
         ///     W02 - Grupo Totais referentes ao ICMS

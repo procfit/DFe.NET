@@ -37,6 +37,7 @@ using DFe.Classes.Entidades;
 using DFe.Utils;
 using NFe.Classes.Informacoes;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
+using NFe.Classes.Informacoes.PagamentoVinculado;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoBensServicos;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoCombustivel;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoPresumido;
@@ -44,6 +45,7 @@ using NFe.Classes.Servicos.Evento.Informacoes.Imobilizacao;
 using NFe.Classes.Servicos.Evento.Informacoes.ItemConsumo;
 using NFe.Classes.Servicos.Evento.Informacoes.ItemNaoFornecido;
 using NFe.Classes.Servicos.Evento.Informacoes.Perecimento;
+using NFe.Classes.Servicos.Evento.Informacoes.TributacaoSimplesNacional;
 
 namespace NFe.Classes.Servicos.Evento
 {
@@ -392,12 +394,12 @@ namespace NFe.Classes.Servicos.Evento
         /// <summary>
         ///     P23 - Informações de crédito presumido por item
         /// </summary>
-        [XmlElement("gCredPres")]
-        public List<gCredPres> gCredPres { get; set; }
+        [XmlElement("gCredPresOper")]
+        public List<gCredPresOper> gCredPresOper { get; set; }
         
-        public bool ShouldSerializegCredPres()
+        public bool ShouldSerializegCredPresOper()
         {
-            return gCredPres != null;
+            return gCredPresOper != null;
         }
 
         #endregion
@@ -537,6 +539,33 @@ namespace NFe.Classes.Servicos.Evento
         public bool ShouldSerializegItemNaoFornecido() => gItemNaoFornecido != null;
 
         #endregion
+
+        #endregion
+
+        #region Vinculação Pagamento (110300) - PL_010h
+
+        /// <summary>
+        ///     Dados do Pagamento vinculado à NF-e (Evento 110300 - Vinculação Pagamento).
+        ///     <para>Nesse evento o gPgto não possui o atributo nPag: deixe-o nulo.</para>
+        /// </summary>
+        public gPgto gPgto { get; set; }
+
+        #endregion
+
+        #region Tributação do Simples Nacional (412140) - PL_010h
+
+        /// <summary>
+        ///     Detalhamento dos tributos do Simples Nacional por item (Evento 412140, autor Fisco). Ocorrência 1-990.
+        /// </summary>
+        [XmlElement("gTribItemSN")]
+        public List<gTribItemSN> gTribItemSN { get; set; }
+
+        public bool ShouldSerializegTribItemSN() => gTribItemSN != null && gTribItemSN.Count > 0;
+
+        /// <summary>
+        ///     Totais do Simples Nacional da NF-e / NFC-e (Evento 412140, autor Fisco)
+        /// </summary>
+        public gTotalSN gTotalSN { get; set; }
 
         #endregion
     }

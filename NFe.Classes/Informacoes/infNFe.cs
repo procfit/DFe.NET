@@ -41,6 +41,7 @@ using NFe.Classes.Informacoes.Emitente;
 using NFe.Classes.Informacoes.Identificacao;
 using NFe.Classes.Informacoes.Observacoes;
 using NFe.Classes.Informacoes.Pagamento;
+using NFe.Classes.Informacoes.PagamentoVinculado;
 using NFe.Classes.Informacoes.Total;
 using NFe.Classes.Informacoes.Transporte;
 using Shared.NFe.Classes.Informacoes.InfRespTec;
@@ -138,6 +139,11 @@ namespace NFe.Classes.Informacoes
         ///     YB01 - Grupo de Informações do Intermediador da Transação 
         /// </summary>
         public infIntermed infIntermed { get; set; }
+
+        /// <summary>
+        ///     Informações da Vinculação com a Transação de Pagamento (PL_010h)
+        /// </summary>
+        public gPgtoVinc gPgtoVinc { get; set; }
 
         /// <summary>
         ///     Z01 - Grupo de Informações Adicionais

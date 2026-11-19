@@ -50,6 +50,7 @@ using NFe.Classes.Servicos.Evento.Informacoes.Imobilizacao;
 using NFe.Classes.Servicos.Evento.Informacoes.ItemConsumo;
 using NFe.Classes.Servicos.Evento.Informacoes.ItemNaoFornecido;
 using NFe.Classes.Servicos.Evento.Informacoes.Perecimento;
+using NFe.Classes.Informacoes.PagamentoVinculado;
 
 namespace NFe.Servicos
 {
@@ -194,7 +195,7 @@ namespace NFe.Servicos
         /// </summary>
         RetornoRecepcaoEvento RecepcaoEventoSolicitacaoDeApropriacaoDeCreditoPresumido(int idLote,
             int sequenciaEvento, string cpfCnpj, TipoAutor tipoAutor, string chaveNFe,
-            List<gCredPres> informacoesDeCreditoPresumidoPorItem,
+            List<gCredPresOper> informacoesDeCreditoPresumidoPorItem,
             Estado? ufAutor = null, string versaoAplicativo = null, DateTimeOffset? dataHoraEvento = null);
 
         /// <summary>
@@ -297,6 +298,18 @@ namespace NFe.Servicos
         RetornoRecepcaoEvento RecepcaoEventoFornecimentoNaoRealizadoComPagamentoAntecipado(int idLote,
             int sequenciaEvento, string cpfCnpj, string chaveNFe, List<gItemNaoFornecido> informacoesPorItemDaNotaDePagamentoAntecipado,
             Estado? ufAutor = null, string versaoAplicativo = null, DateTimeOffset? dataHoraEvento = null);
+
+        /// <summary>
+        ///     Serviço para o evento 110300 - Vinculação Pagamento (PL_010h)
+        /// </summary>
+        RetornoRecepcaoEvento RecepcaoEventoVinculacaoPagamento(int idLote,
+            int sequenciaEvento, string cpfCnpj, string chaveNFe, string protocoloAutorizacao, gPgto pagamento,
+            Estado? ufAutor = null, string versaoAplicativo = null, DateTimeOffset? dataHoraEvento = null);
+
+        /// <summary>
+        ///     Envia eventos 110300 - Vinculação Pagamento já montados (e opcionalmente já assinados)
+        /// </summary>
+        RetornoRecepcaoEvento RecepcaoEventoVinculacaoPagamento(int idLote, List<evento> eventos, bool assinar = false);
 
         /// <summary>
         ///     Consulta a situação cadastral, com base na UF/Documento

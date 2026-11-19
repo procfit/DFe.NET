@@ -671,28 +671,58 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
         /// </summary>
         [Description("Município")]
         [XmlEnum("4")]
-        Municipio
+        Municipio,
+
+        /// <summary>
+        /// 5 - Consórcio Público (PL_010h)
+        /// </summary>
+        [Description("Consórcio Público")]
+        [XmlEnum("5")]
+        ConsorcioPublico,
+
+        /// <summary>
+        /// 6 - Comitê Gestor do IBS (PL_010h)
+        /// </summary>
+        [Description("Comitê Gestor do IBS")]
+        [XmlEnum("6")]
+        ComiteGestorDoIbs
     }
-    
+
     /// <summary>
     ///     Tipo de operação com o ente governamental
-    ///     <para>1 - Fornecimento</para>
-    ///     <para>2 - Recebimento do pagamento, conforme fato gerador do IBS/CBS definido no Art. 10 § 2º</para>
+    ///     <para>1 - Fornecimento com pagamento posterior</para>
+    ///     <para>2 - Recebimento do pagamento com fornecimento já realizado</para>
+    ///     <para>3 - Fornecimento com pagamento já realizado (PL_010h)</para>
+    ///     <para>4 - Recebimento do pagamento com fornecimento posterior (PL_010h)</para>
     /// </summary>
     public enum TpOperGov
     {
         /// <summary>
-        /// 1 - Fornecimento
+        /// 1 - Fornecimento com pagamento posterior
         /// </summary>
-        [Description("Fornecimento")]
+        [Description("Fornecimento com pagamento posterior")]
         [XmlEnum("1")]
         Fornecimento,
-        
+
         /// <summary>
-        /// 2 - Recebimento do pagamento, conforme fato gerador do IBS/CBS definido no Art. 10 § 2º
+        /// 2 - Recebimento do pagamento com fornecimento já realizado
         /// </summary>
-        [Description("Recebimento do pagamento, conforme fato gerador do IBS/CBS definido no Art. 10 § 2º")]
+        [Description("Recebimento do pagamento com fornecimento já realizado")]
         [XmlEnum("2")]
-        RecebimentoPagamento
+        RecebimentoPagamento,
+
+        /// <summary>
+        /// 3 - Fornecimento com pagamento já realizado (PL_010h)
+        /// </summary>
+        [Description("Fornecimento com pagamento já realizado")]
+        [XmlEnum("3")]
+        FornecimentoComPagamentoJaRealizado,
+
+        /// <summary>
+        /// 4 - Recebimento do pagamento com fornecimento posterior (PL_010h)
+        /// </summary>
+        [Description("Recebimento do pagamento com fornecimento posterior")]
+        [XmlEnum("4")]
+        RecebimentoPagamentoComFornecimentoPosterior
     }
 }

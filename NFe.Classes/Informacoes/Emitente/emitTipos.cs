@@ -71,4 +71,42 @@ namespace NFe.Classes.Informacoes.Emitente
         [XmlEnum("4")]
         SimplesNacionalMei = 4
     }
+
+    /// <summary>
+    ///     Tipo de Regime de Apuração do IBS e da CBS (PL_010h)
+    ///     <para>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS;</para>
+    ///     <para>2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=1 sem regime regular do IBS e da CBS;</para>
+    ///     <para>3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=2 sem regime regular do IBS e da CBS;</para>
+    ///     <para>4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS.</para>
+    /// </summary>
+    public enum TipoRegimeIBSCBS
+    {
+        /// <summary>
+        /// 1 - Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS
+        /// </summary>
+        [Description("Simples Nacional com opção pelo regime regular do IBS e da CBS")]
+        [XmlEnum("1")]
+        SimplesNacionalComRegimeRegular = 1,
+
+        /// <summary>
+        /// 2 - Regime Normal (CRT=3) com opção pendente pelo CRT=1, sem regime regular do IBS e da CBS
+        /// </summary>
+        [Description("Regime Normal com opção pendente pelo Simples Nacional, sem regime regular do IBS e da CBS")]
+        [XmlEnum("2")]
+        RegimeNormalOpcaoPendenteSimplesNacional = 2,
+
+        /// <summary>
+        /// 3 - Regime Normal (CRT=3) com opção pendente pelo CRT=2, sem regime regular do IBS e da CBS
+        /// </summary>
+        [Description("Regime Normal com opção pendente pelo Simples Nacional - excesso de sublimite, sem regime regular do IBS e da CBS")]
+        [XmlEnum("3")]
+        RegimeNormalOpcaoPendenteSimplesNacionalExcessoSublimite = 3,
+
+        /// <summary>
+        /// 4 - Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS
+        /// </summary>
+        [Description("Regime Normal com opção pendente pelo Simples Nacional, com regime regular do IBS e da CBS")]
+        [XmlEnum("4")]
+        RegimeNormalOpcaoPendenteSimplesNacionalComRegimeRegular = 4
+    }
 }

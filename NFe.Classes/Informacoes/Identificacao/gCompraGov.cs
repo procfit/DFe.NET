@@ -31,6 +31,8 @@
 /* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
 /********************************************************************************/
 
+using System.Collections.Generic;
+using System.Xml.Serialization;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
 
 namespace NFe.Classes.Informacoes.Identificacao
@@ -57,5 +59,14 @@ namespace NFe.Classes.Informacoes.Identificacao
         ///     B34 - Tipo de operação com o ente governamental
         /// </summary>
         public TpOperGov tpOperGov { get; set; }
+
+        /// <summary>
+        ///     B34a - Chave de acesso do documento fiscal anterior (0-99) (PL_010h)
+        ///     <para>Deve ser informado para tpOperGov 2 e 3 e é vedado para 1 e 4. No tpOperGov 2 aceita apenas uma chave.</para>
+        /// </summary>
+        [XmlElement("refDFeAnt")]
+        public List<string> refDFeAnt { get; set; }
+
+        public bool ShouldSerializerefDFeAnt() => refDFeAnt != null && refDFeAnt.Count > 0;
     }
 }

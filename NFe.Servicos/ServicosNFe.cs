@@ -80,6 +80,7 @@ using FuncoesXml = DFe.Utils.FuncoesXml;
 using NFe.Classes.Servicos.ConsultaGtin;
 using NFe.Utils.ConsultaGtin;
 using NFe.Classes.Informacoes;
+using NFe.Classes.Informacoes.PagamentoVinculado;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoBensServicos;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoCombustivel;
 using NFe.Classes.Servicos.Evento.Informacoes.CreditoPresumido;
@@ -437,6 +438,7 @@ namespace NFe.Servicos
                 ServicoNFe.RecepcaoEventoPerecimentoPerdaRouboOuFurtoDuranteOTransporteContratadoPeloFornecedor,
                 ServicoNFe.RecepcaoEventoFornecimentoNaoRealizadoComPagamentoAntecipado,
                 ServicoNFe.RecepcaoEventoAtualizacaoDataPrevisaoDeEntrega,
+                ServicoNFe.RecepcaoEventoVinculacaoPagamento,
             };
             if (
                 !listaEventos.Contains(servicoEvento))
@@ -485,7 +487,7 @@ namespace NFe.Servicos
             #region Valida, Envia os dados e obtém a resposta
 
             var xmlEvento = _cFgServico.RemoverAcentos
-                    ? pedEvento.ObterXmlString().RemoverAcentos()
+                    ? pedEvento.ObterXmlString().RemoverAcentosPreservandoDescEvento()
                     : pedEvento.ObterXmlString();
 
             SalvarArquivoXml(idlote + "-ped-eve.xml", xmlEvento);
@@ -504,7 +506,7 @@ namespace NFe.Servicos
                         var detEvento = evento.infEvento.detEvento;
                         var detEventoXml = FuncoesXml.ClasseParaXmlString(detEvento);
                         if (_cFgServico.RemoverAcentos)
-                            detEventoXml = detEventoXml.RemoverAcentos();
+                            detEventoXml = detEventoXml.RemoverAcentosPreservandoDescEvento();
 
                         Validador.Valida(servicoEvento, _cFgServico.VersaoRecepcaoEventoCceCancelamento, detEventoXml, cfgServico: _cFgServico, validarLote: false);
                     }
@@ -582,6 +584,7 @@ namespace NFe.Servicos
                 case ServicoNFe.RecepcaoEventoPerecimentoPerdaRouboOuFurtoDuranteOTransporteContratadoPeloFornecedor:
                 case ServicoNFe.RecepcaoEventoFornecimentoNaoRealizadoComPagamentoAntecipado:
                 case ServicoNFe.RecepcaoEventoAtualizacaoDataPrevisaoDeEntrega: 
+                case ServicoNFe.RecepcaoEventoVinculacaoPagamento:
                     deveValidarDetalhamentoDoEvento = true;
                     break;
                 default: 
@@ -1412,9 +1415,11 @@ namespace NFe.Servicos
             
             return retornoRecepcaoEvento;
         }
-        
+
         /// <summary>
-        ///     Serviço para evento informação de efetivo pagamento integral para liberar crédito presumido do adquirente
+        ///     Serviço para Evento a ser gerado pelo destinatário da NF-e em relação às notas fiscais de aquisição de emissão 
+        ///     de terceiros e que lhe gerem o direito à apropriação de crédito presumido, 
+        ///     ou pelo emitente quando a informação não tiver sido incluída na NF - e ou necessitar correção.
         /// </summary>
         /// <param name="idLote">Nº do lote</param>
         /// <param name="sequenciaEvento">sequencia do evento</param>
@@ -1431,7 +1436,7 @@ namespace NFe.Servicos
                                                                                               string cpfCnpj, 
                                                                                               TipoAutor tipoAutor,
                                                                                               string chaveNFe, 
-                                                                                              List<gCredPres> informacoesDeCreditoPresumidoPorItem,
+                                                                                              List<gCredPresOper> informacoesDeCreditoPresumidoPorItem,
                                                                                               Estado? ufAutor = null, 
                                                                                               string versaoAplicativo = null, 
                                                                                               DateTimeOffset? dataHoraEvento = null)
@@ -1442,7 +1447,7 @@ namespace NFe.Servicos
             var versaoServicoRecepcaoString = servicoNfe.VersaoServicoParaString(versaoServicoRecepcao);
 
             var detalhesEvento = ObterDetalhesEvento(versaoServicoRecepcaoString, versaoAplicativo, nfeTipoEvento, ufAutor, tipoAutor);
-            detalhesEvento.gCredPres = informacoesDeCreditoPresumidoPorItem;
+            detalhesEvento.gCredPresOper = informacoesDeCreditoPresumidoPorItem;
 
             var informacoesEventoEnv = ObterInformacoesEventoEnv(sequenciaEvento, chaveNFe, cpfCnpj, versaoServicoRecepcaoString, cOrgao: Estado.SVRS, dataHoraEvento, nfeTipoEvento, detalhesEvento);
             var evento = ObterEvento(versaoServicoRecepcaoString, informacoesEventoEnv);
@@ -2045,8 +2050,68 @@ namespace NFe.Servicos
             var evento = ObterEvento(versaoServicoRecepcaoString, informacoesEventoEnv);
 
             var retornoRecepcaoEvento = EnviarEObterRetornoRecepcaoEvento(idLote, servicoNfe, versaoServicoRecepcao, deveAssinar: true, evento);
-            
+
             return retornoRecepcaoEvento;
+        }
+
+        /// <summary>
+        ///     Serviço para o evento 110300 - Vinculação Pagamento (PL_010h): permite ao emitente vincular a transação
+        ///     de pagamento ao DF-e já autorizado.
+        ///     <para>
+        ///         Assim como os demais eventos da Reforma Tributária, é enviado ao ambiente da SVRS (cOrgao 92), que também
+        ///         recebe o 110001 (Cancelamento de Evento) usado para cancelá-lo.
+        ///     </para>
+        /// </summary>
+        /// <param name="idLote">Nº do lote</param>
+        /// <param name="sequenciaEvento">sequencia do evento</param>
+        /// <param name="cpfCnpj">CPF/CNPJ do autor do evento</param>
+        /// <param name="chaveNFe">Chave de acesso da NF-e</param>
+        /// <param name="protocoloAutorizacao">Número do protocolo de autorização do DF-e (nProt)</param>
+        /// <param name="pagamento">Dados do pagamento (tpMeioPgto, CNPJReceb, CNPJBasePSP e idTransacao). Não informar nPag.</param>
+        /// <param name="ufAutor">UF do autor do evento (cOrgaoAutor). Padrão: cUF da configuração</param>
+        /// <param name="versaoAplicativo"></param>
+        /// <param name="dataHoraEvento"></param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoVinculacaoPagamento(int idLote,
+                                                                       int sequenciaEvento,
+                                                                       string cpfCnpj,
+                                                                       string chaveNFe,
+                                                                       string protocoloAutorizacao,
+                                                                       gPgto pagamento,
+                                                                       Estado? ufAutor = null,
+                                                                       string versaoAplicativo = null,
+                                                                       DateTimeOffset? dataHoraEvento = null)
+        {
+            const ServicoNFe servicoNfe = ServicoNFe.RecepcaoEventoVinculacaoPagamento;
+            const NFeTipoEvento nfeTipoEvento = NFeTipoEvento.TeNfeVinculacaoPagamento;
+            var versaoServicoRecepcao = _cFgServico.VersaoRecepcaoEventosDeApuracaoDoIbsECbs;
+            var versaoServicoRecepcaoString = servicoNfe.VersaoServicoParaString(versaoServicoRecepcao);
+
+            var detalhesEvento = ObterDetalhesEvento(versaoServicoRecepcaoString, versaoAplicativo, nfeTipoEvento, ufAutor, TipoAutor.taEmpresaEmitente);
+            detalhesEvento.nProt = protocoloAutorizacao;
+            detalhesEvento.gPgto = pagamento;
+
+            var informacoesEventoEnv = ObterInformacoesEventoEnv(sequenciaEvento, chaveNFe, cpfCnpj, versaoServicoRecepcaoString, cOrgao: Estado.SVRS, dataHoraEvento, nfeTipoEvento, detalhesEvento);
+            var evento = ObterEvento(versaoServicoRecepcaoString, informacoesEventoEnv);
+
+            var retornoRecepcaoEvento = EnviarEObterRetornoRecepcaoEvento(idLote, servicoNfe, versaoServicoRecepcao, deveAssinar: true, evento);
+
+            return retornoRecepcaoEvento;
+        }
+
+        /// <summary>
+        ///     Envia eventos 110300 - Vinculação Pagamento já montados (e opcionalmente já assinados).
+        /// </summary>
+        /// <param name="idLote"></param>
+        /// <param name="eventos"></param>
+        /// <param name="assinar">
+        /// false (padrão) para transmitir os eventos exatamente como vieram, já assinados; true para a biblioteca
+        /// calcular o Id e assinar cada evento com o certificado desta instância de ServicosNFe.
+        /// </param>
+        /// <returns></returns>
+        public RetornoRecepcaoEvento RecepcaoEventoVinculacaoPagamento(int idLote, List<evento> eventos, bool assinar = false)
+        {
+            return RecepcaoEvento(idLote, eventos, ServicoNFe.RecepcaoEventoVinculacaoPagamento, _cFgServico.VersaoRecepcaoEventosDeApuracaoDoIbsECbs, assinar);
         }
 
         private detEvento ObterDetalhesEvento(string versaoServico, string versaoAplicativo, NFeTipoEvento nfeTipoEvento, Estado? cOrgaoAutor, TipoAutor tipoAutor)

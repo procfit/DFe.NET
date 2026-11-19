@@ -31,36 +31,83 @@
 /* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
 /********************************************************************************/
 
-using NFe.Classes.Informacoes.Detalhe;
+using System.Xml.Serialization;
 
-namespace NFe.Classes.Servicos.Evento.Informacoes.CreditoPresumido
+namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.InformacoesIbsCbs.SimplesNacional
 {
-    public class gIBS
+    /// <summary>
+    ///     Grupo de informações da composição do valor do IBS e da CBS para o Simples Nacional (PL_010h)
+    /// </summary>
+    public class gTribSN
     {
-        private decimal _pCredPres;
-        private decimal _vCredPres;
-        
         /// <summary>
-        ///     P27 - Código de Classificação do Crédito presumido, conforme tabela cCredPres (Anexo IV) 
+        ///     Grupo de informações da composição do valor do IBS para o Simples Nacional (opcional)
         /// </summary>
-        public CCredPres cCredPres { get; set; }
+        [XmlElement(Order = 1)]
+        public gIBSSN gIBSSN { get; set; }
 
         /// <summary>
-        ///     P28 - Percentual do Crédito Presumido
+        ///     Grupo de informações da composição do valor da CBS para o Simples Nacional
         /// </summary>
-        public decimal pCredPres
+        [XmlElement(Order = 2)]
+        public gCBSSN gCBSSN { get; set; }
+    }
+
+    /// <summary>
+    ///     Grupo de informações da composição do valor do IBS para o Simples Nacional (PL_010h)
+    /// </summary>
+    public class gIBSSN
+    {
+        private decimal _pIBSSN;
+        private decimal _vIBSSN;
+
+        /// <summary>
+        ///     Alíquota efetiva do IBS para os optantes do Simples Nacional
+        /// </summary>
+        [XmlElement(Order = 1)]
+        public decimal pIBSSN
         {
-            get => _pCredPres.Arredondar(4);
-            set => _pCredPres = value.Arredondar(4);
+            get => _pIBSSN.Arredondar(4);
+            set => _pIBSSN = value.Arredondar(4);
         }
 
         /// <summary>
-        ///     P29 - Valor do Crédito Presumido
+        ///     Valor do IBS para os optantes do Simples Nacional
         /// </summary>
-        public decimal vCredPres
+        [XmlElement(Order = 2)]
+        public decimal vIBSSN
         {
-            get => _vCredPres.Arredondar(2);
-            set => _vCredPres = value.Arredondar(2);
+            get => _vIBSSN.Arredondar(2);
+            set => _vIBSSN = value.Arredondar(2);
+        }
+    }
+
+    /// <summary>
+    ///     Grupo de informações da composição do valor da CBS para o Simples Nacional (PL_010h)
+    /// </summary>
+    public class gCBSSN
+    {
+        private decimal _pCBSSN;
+        private decimal _vCBSSN;
+
+        /// <summary>
+        ///     Alíquota efetiva da CBS para os optantes do Simples Nacional
+        /// </summary>
+        [XmlElement(Order = 1)]
+        public decimal pCBSSN
+        {
+            get => _pCBSSN.Arredondar(4);
+            set => _pCBSSN = value.Arredondar(4);
+        }
+
+        /// <summary>
+        ///     Valor da CBS para os optantes do Simples Nacional
+        /// </summary>
+        [XmlElement(Order = 2)]
+        public decimal vCBSSN
+        {
+            get => _vCBSSN.Arredondar(2);
+            set => _vCBSSN = value.Arredondar(2);
         }
     }
 }

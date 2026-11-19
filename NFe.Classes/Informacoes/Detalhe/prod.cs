@@ -51,6 +51,8 @@ namespace NFe.Classes.Informacoes.Detalhe
         private decimal _qcom;
         private decimal _qtrib;
         private decimal _vprod;
+        private decimal? _vUnComLiq;
+        private decimal? _vProdLiq;
         private decimal _vUnTrib;
         private decimal? _vFrete;
         private decimal? _vSeg;
@@ -178,6 +180,26 @@ namespace NFe.Classes.Informacoes.Detalhe
         }
 
         /// <summary>
+        ///     I11a - Valor Líquido Unitário do Produto ou Serviço (sem tributos) (PL_010h)
+        ///     <para>Informar junto com vProdLiq: o XSD exige os dois ou nenhum.</para>
+        /// </summary>
+        public decimal? vUnComLiq
+        {
+            get { return _vUnComLiq; }
+            set { _vUnComLiq = value.Arredondar(10); }
+        }
+
+        /// <summary>
+        ///     I11b - Valor Líquido do Produto ou Serviço (sem tributos) (PL_010h)
+        ///     <para>Informar junto com vUnComLiq: o XSD exige os dois ou nenhum.</para>
+        /// </summary>
+        public decimal? vProdLiq
+        {
+            get { return _vProdLiq; }
+            set { _vProdLiq = value.Arredondar(2); }
+        }
+
+        /// <summary>
         ///     I12 - GTIN (Global Trade Item Number) do produto, antigo código EAN ou código de barras
         /// </summary>
         public string cEANTrib
@@ -259,7 +281,13 @@ namespace NFe.Classes.Informacoes.Detalhe
         ///     I17c - Indicador de fornecimento de bem móvel usado
         /// </summary>
         public IndBemMovelUsado? indBemMovelUsado { get; set; }
-        
+
+        /// <summary>
+        ///     I17d - Código de atividade do Simples Nacional (PL_010h)
+        ///     <para>Informar somente quando o emitente for optante do Simples Nacional ou estiver com opção pendente.</para>
+        /// </summary>
+        public CodigoAtividadeSN? cAtivSN { get; set; }
+
         /// <summary>
         ///     I18 - Declaração de Importação
         /// </summary>
@@ -354,5 +382,11 @@ namespace NFe.Classes.Informacoes.Detalhe
         }
         
         public bool ShouldSerializeindBemMovelUsado() => indBemMovelUsado.HasValue;
+
+        public bool ShouldSerializevUnComLiq() => vUnComLiq.HasValue;
+
+        public bool ShouldSerializevProdLiq() => vProdLiq.HasValue;
+
+        public bool ShouldSerializecAtivSN() => cAtivSN.HasValue;
     }
 }

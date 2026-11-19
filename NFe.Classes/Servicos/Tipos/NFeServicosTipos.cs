@@ -250,7 +250,12 @@ namespace NFe.Classes.Servicos.Tipos
         /// <summary>
         ///     Serviço para permitir ao fornecedor informar a atualização da data prevista de entrega
         /// </summary>
-        RecepcaoEventoAtualizacaoDataPrevisaoDeEntrega
+        RecepcaoEventoAtualizacaoDataPrevisaoDeEntrega,
+
+        /// <summary>
+        ///     Serviço para permitir ao emitente vincular a transação de pagamento ao DF-e (Evento 110300 - Vinculação Pagamento) (PL_010h)
+        /// </summary>
+        RecepcaoEventoVinculacaoPagamento
     }
 
     /// <summary>
@@ -289,6 +294,7 @@ namespace NFe.Classes.Servicos.Tipos
     ///     110193 - Cancelamento Insucesso na Entrega da NF-e
     ///     110750 - Conciliação Financeira da NF-e
     ///     110751 - Cancelamento Conciliação Financeira da NF-e
+    ///     110300 - Vinculação Pagamento
     ///     112110 - Informação de efetivo pagamento integral para liberar crédito presumido do adquirente
     ///     112120 - Importação em ALC/ZFM não convertida em isenção
     ///     112130 - Perecimento, perda, roubo ou furto durante o transporte contratado pelo fornecedor
@@ -309,6 +315,7 @@ namespace NFe.Classes.Servicos.Tipos
     ///     212120 -  Manifestação sobre Pedido de Transferência de Crédito de CBS em Operações de Sucessão
     ///     412120 -  Manifestação do Fisco sobre Pedido de Transferência de Crédito de IBS em Operações de Sucessão
     ///     412130 -  Manifestação do Fisco sobre Pedido de Transferência de Crédito de CBS em Operações de Sucessão
+    ///     412140 -  Tributação do Simples Nacional
     /// </summary>
     public enum NFeTipoEvento
     {
@@ -395,7 +402,14 @@ namespace NFe.Classes.Servicos.Tipos
         [Description("Cancelamento Conciliação Financeira")]
         [XmlEnum("110751")]
         TeNfeCancConciliacaoFinanceiraNFe = 110751,
-        
+
+        /// <summary>
+        /// 110300 - Vinculação Pagamento (vinculação da transação de pagamento ao DF-e) (PL_010h)
+        /// </summary>
+        [Description("Vinculação Pagamento")]
+        [XmlEnum("110300")]
+        TeNfeVinculacaoPagamento = 110300,
+
         /// <summary>
         /// 112110 - Informação de efetivo pagamento integral para liberar crédito presumido do adquirente
         /// </summary>
@@ -507,7 +521,14 @@ namespace NFe.Classes.Servicos.Tipos
         [Description("Manifestação do Fisco sobre Pedido de Transferência de Crédito de CBS em Operação de Sucessão")]
         [XmlEnum("412130")]
         TeNfeManifestacaoDoFiscoSobrePedidoDeTransferenciaDeCreditoDeCbsEmOperacoesDeSucessao = 412130,
-        
+
+        /// <summary>
+        /// 412140 - Tributação do Simples Nacional (evento do Fisco) (PL_010h)
+        /// </summary>
+        [Description("Tributação do Simples Nacional")]
+        [XmlEnum("412140")]
+        TeNfeTributacaoDoSimplesNacional = 412140,
+
         /// <summary>
         /// 210200 – Confirmação da Operação
         /// </summary>

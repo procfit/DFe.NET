@@ -34,6 +34,7 @@
 using System.Xml.Serialization;
 using NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.InformacoesIbsCbs;
 using NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.InformacoesIbsCbs.InformacoesIbs;
+using NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.InformacoesIbsCbs.SimplesNacional;
 using NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.Tipos;
 
 namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado
@@ -79,16 +80,16 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado
         public gTransfCred gTransfCred { get; set; }
 
         /// <summary>
-        ///     UB109 - Informações do crédito presumido de IBS para fornecimentos a partir da ZFM
-        /// </summary>
-        [XmlElement(Order = 7)]
-        public gCredPresIBSZFM gCredPresIBSZFM { get; set; }
-
-        /// <summary>
         ///     UB112 - Grupo de Informações do Ajuste de Competência
         /// </summary>
-        [XmlElement(Order = 8)]
+        [XmlElement(Order = 7)]
         public gAjusteCompet gAjusteCompet { get; set; }
+
+        /// <summary>
+        ///     Grupo de informações da composição do valor do IBS e da CBS para o Simples Nacional (PL_010h)
+        /// </summary>
+        [XmlElement(Order = 8)]
+        public gTribSN gTribSN { get; set; }
 
         /// <summary>
         ///     UB116 - Grupo de Informações do Estorno de Crédito
@@ -98,8 +99,16 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado
 
         /// <summary>
         ///     UB120 - Grupo de Informações do Crédito Presumido da Operação
+        ///     <para>Mutuamente exclusivo com gCredPresIBSZFM.</para>
         /// </summary>
         [XmlElement(Order = 10)]
         public gCredPresOper gCredPresOper { get; set; }
+
+        /// <summary>
+        ///     UB109 - Informações do crédito presumido de IBS para fornecimentos a partir da ZFM
+        ///     <para>Mutuamente exclusivo com gCredPresOper. Pelo XSD fica após gEstornoCred (choice final de TTribNFe).</para>
+        /// </summary>
+        [XmlElement(Order = 11)]
+        public gCredPresIBSZFM gCredPresIBSZFM { get; set; }
     }
 }

@@ -31,15 +31,31 @@
 /* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
 /********************************************************************************/
 
+using System.Xml.Serialization;
+
 namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Compartilhado.InformacoesIbsCbs
 {
     public class gDevTrib
     {
         private decimal _vDevTrib { get; set; }
+        private decimal? _pDevTrib;
+
+        /// <summary>
+        ///     Percentual de devolução do tributo, conforme LC 214/25 art. 118 (PL_010h)
+        /// </summary>
+        [XmlElement(Order = 1)]
+        public decimal? pDevTrib
+        {
+            get => _pDevTrib.Arredondar(4);
+            set => _pDevTrib = value.Arredondar(4);
+        }
+
+        public bool ShouldSerializepDevTrib() => pDevTrib.HasValue;
 
         /// <summary>
         ///     Valor do tributo devolvido
         /// </summary>
+        [XmlElement(Order = 2)]
         public decimal vDevTrib
         {
             get => _vDevTrib.Arredondar(2);

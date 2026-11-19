@@ -72,5 +72,11 @@ namespace NFe.Classes.Informacoes.Total.IbsCbs
         /// </summary>
         [XmlElement("gEstornoCred")]
         public gEstornoCredTotal gEstornoCred { get; set; }
+
+        /// <summary>
+        ///     Grupo de totais da composição do valor do IBS e da CBS para o Simples Nacional (PL_010h)
+        /// </summary>
+        [XmlElement("gTribSN")]
+        public gTribSNTotal gTribSN { get; set; }
     }
 }
